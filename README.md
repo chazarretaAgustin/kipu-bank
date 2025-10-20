@@ -9,7 +9,7 @@ Para desplegar el contrato en el entorno Remix, primero se debe compilar el cont
 
 ACLARACIONES:
 
-En esta segunda version del kipu-bank, se incluyen correcciones respecto a la versión anterior. Se modificó el estilo de desarrollo, el cual ahora se encuentra en inglés tanto en variables y funciones como en documentacion, a fin de seguir los estándares del ecosistema. Se incluyo el uso de funciones especiales como receive y fallback. Respecto a los modificadores, en esta version solo se usaron en aquellas validaciones/verificaciones que son comunes a varias funciones, dejando las verificaciones/validaciones específicas de una funcion, en la pripia función.
+En esta segunda versión del kipu-bank, se incluyen correcciones respecto a la versión anterior. Se modificó el estilo de desarrollo, el cual ahora se encuentra en inglés tanto en variables y funciones como en documentacion, a fin de seguir los estándares del ecosistema. Se incluyó el uso de funciones especiales como receive y fallback. Respecto a los modificadores, en esta versión solo se usaron en aquellas validaciones/verificaciones que son comunes a varias funciones, dejando las verificaciones/validaciones específicas de una función, en la pripia función.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 TP Modulo 2
