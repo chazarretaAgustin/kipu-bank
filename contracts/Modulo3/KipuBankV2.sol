@@ -138,16 +138,16 @@ contract KipuBankV2 is Ownable {
      * @notice Receive: Used for ETH deposits without function data
      */
     receive() external payable {
-        depositEth(msg.value);
+        _depositEth(msg.value);
     }
 
     /*/// DEPOSIT FUNCTIONS ///*/
 
     /**
-     * @notice Allows a user to deposit Ether.
+     * @notice Internal function that allows you to deposit ether.
      * @param _amount Amount of ETH to deposit (in 18 decimals).
      */
-    function depositEth(uint256 _amount) public payable nonZeroAmount(_amount) {
+    function _depositEth(uint256 _amount) internal nonZeroAmount(_amount) {
         if (msg.value != _amount) revert InsufficientBalance();
 
         uint256 amountUSD = getEthValueInUSD(_amount); // Determines the deposit value in USD
@@ -162,6 +162,19 @@ contract KipuBankV2 is Ownable {
 
         // Emits deposit executed event
         emit DepositExecuted(msg.sender, ETH_TOKEN_ADDRESS, _amount, amountUSD);
+    }
+
+    /**
+     * @notice Allows a user to deposit Ether (ETH) into the bank.
+     * @dev This function acts as an external wrapper for the internal logic (_depositEth) and ensures msg.value matches _amount.
+     * @param _amount The amount of ETH to deposit, which must be equal to msg.value (in 18 decimals, Wei).
+     */
+    function depositEth(
+        uint256 _amount
+    ) external payable nonZeroAmount(_amount) {
+        if (msg.value != _amount) revert InsufficientBalance();
+
+        _depositEth(_amount);
     }
 
     /**
@@ -288,4 +301,3 @@ contract KipuBankV2 is Ownable {
         return uint256(ethUSDPrice); // Returns the price in uint256 format
     }
 }
-
