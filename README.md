@@ -11,6 +11,11 @@ ACLARACIONES:
 
 En esta segunda versión del kipu-bank, se incluyen correcciones respecto a la versión anterior. Se modificó el estilo de desarrollo, el cual ahora se encuentra en inglés tanto en variables y funciones como en documentacion, a fin de seguir los estándares del ecosistema. Se incluyó el uso de funciones especiales como receive y fallback. Respecto a los modificadores, en esta versión solo se usaron en aquellas validaciones/verificaciones que son comunes a varias funciones, dejando las verificaciones/validaciones específicas de una función, en la propia función.
 
+IMPORTANTE:
+
+Se hizo un cambio de último momento en las funciones para depositar por lo cual se recompiló y deployo el contrato, y se volvió a verificar. La dirección del contrato verificado NO es la que esta en el campus, sino la que esta en el documento de texto en la carpeta Modulo 3 (el documento se llama Modulo 3.txt).
+Address: [0xD96192607d3EDDAb64bC8Ff1f587b39C771F2Fa3]
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 TP Modulo 2
 
