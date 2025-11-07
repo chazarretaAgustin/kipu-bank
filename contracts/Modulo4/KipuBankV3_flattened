@@ -1,0 +1,1070 @@
+
+// File: @openzeppelin/contracts/utils/Context.sol
+
+
+// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)
+
+pragma solidity ^0.8.20;
+
+/**
+ * @dev Provides information about the current execution context, including the
+ * sender of the transaction and its data. While these are generally available
+ * via msg.sender and msg.data, they should not be accessed in such a direct
+ * manner, since when dealing with meta-transactions the account sending and
+ * paying for execution may not be the actual sender (as far as an application
+ * is concerned).
+ *
+ * This contract is only required for intermediate, library-like contracts.
+ */
+abstract contract Context {
+    function _msgSender() internal view virtual returns (address) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view virtual returns (bytes calldata) {
+        return msg.data;
+    }
+
+    function _contextSuffixLength() internal view virtual returns (uint256) {
+        return 0;
+    }
+}
+
+// File: @openzeppelin/contracts/access/Ownable.sol
+
+
+// OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)
+
+pragma solidity ^0.8.20;
+
+
+/**
+ * @dev Contract module which provides a basic access control mechanism, where
+ * there is an account (an owner) that can be granted exclusive access to
+ * specific functions.
+ *
+ * The initial owner is set to the address provided by the deployer. This can
+ * later be changed with {transferOwnership}.
+ *
+ * This module is used through inheritance. It will make available the modifier
+ * `onlyOwner`, which can be applied to your functions to restrict their use to
+ * the owner.
+ */
+abstract contract Ownable is Context {
+    address private _owner;
+
+    /**
+     * @dev The caller account is not authorized to perform an operation.
+     */
+    error OwnableUnauthorizedAccount(address account);
+
+    /**
+     * @dev The owner is not a valid owner account. (eg. `address(0)`)
+     */
+    error OwnableInvalidOwner(address owner);
+
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    /**
+     * @dev Initializes the contract setting the address provided by the deployer as the initial owner.
+     */
+    constructor(address initialOwner) {
+        if (initialOwner == address(0)) {
+            revert OwnableInvalidOwner(address(0));
+        }
+        _transferOwnership(initialOwner);
+    }
+
+    /**
+     * @dev Throws if called by any account other than the owner.
+     */
+    modifier onlyOwner() {
+        _checkOwner();
+        _;
+    }
+
+    /**
+     * @dev Returns the address of the current owner.
+     */
+    function owner() public view virtual returns (address) {
+        return _owner;
+    }
+
+    /**
+     * @dev Throws if the sender is not the owner.
+     */
+    function _checkOwner() internal view virtual {
+        if (owner() != _msgSender()) {
+            revert OwnableUnauthorizedAccount(_msgSender());
+        }
+    }
+
+    /**
+     * @dev Leaves the contract without owner. It will not be possible to call
+     * `onlyOwner` functions. Can only be called by the current owner.
+     *
+     * NOTE: Renouncing ownership will leave the contract without an owner,
+     * thereby disabling any functionality that is only available to the owner.
+     */
+    function renounceOwnership() public virtual onlyOwner {
+        _transferOwnership(address(0));
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) public virtual onlyOwner {
+        if (newOwner == address(0)) {
+            revert OwnableInvalidOwner(address(0));
+        }
+        _transferOwnership(newOwner);
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Internal function without access restriction.
+     */
+    function _transferOwnership(address newOwner) internal virtual {
+        address oldOwner = _owner;
+        _owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+}
+
+// File: @openzeppelin/contracts/token/ERC20/IERC20.sol
+
+
+// OpenZeppelin Contracts (last updated v5.4.0) (token/ERC20/IERC20.sol)
+
+pragma solidity >=0.4.16;
+
+/**
+ * @dev Interface of the ERC-20 standard as defined in the ERC.
+ */
+interface IERC20 {
+    /**
+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
+     * another (`to`).
+     *
+     * Note that `value` may be zero.
+     */
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    /**
+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
+     * a call to {approve}. `value` is the new allowance.
+     */
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    /**
+     * @dev Returns the value of tokens in existence.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the value of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256);
+
+    /**
+     * @dev Moves a `value` amount of tokens from the caller's account to `to`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address to, uint256 value) external returns (bool);
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    /**
+     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
+     * caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 value) external returns (bool);
+
+    /**
+     * @dev Moves a `value` amount of tokens from `from` to `to` using the
+     * allowance mechanism. `value` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(address from, address to, uint256 value) external returns (bool);
+}
+
+// File: @openzeppelin/contracts/interfaces/IERC20.sol
+
+
+// OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC20.sol)
+
+pragma solidity >=0.4.16;
+
+
+// File: @openzeppelin/contracts/utils/introspection/IERC165.sol
+
+
+// OpenZeppelin Contracts (last updated v5.4.0) (utils/introspection/IERC165.sol)
+
+pragma solidity >=0.4.16;
+
+/**
+ * @dev Interface of the ERC-165 standard, as defined in the
+ * https://eips.ethereum.org/EIPS/eip-165[ERC].
+ *
+ * Implementers can declare support of contract interfaces, which can then be
+ * queried by others ({ERC165Checker}).
+ *
+ * For an implementation, see {ERC165}.
+ */
+interface IERC165 {
+    /**
+     * @dev Returns true if this contract implements the interface defined by
+     * `interfaceId`. See the corresponding
+     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]
+     * to learn more about how these ids are created.
+     *
+     * This function call must use less than 30 000 gas.
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+
+// File: @openzeppelin/contracts/interfaces/IERC165.sol
+
+
+// OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC165.sol)
+
+pragma solidity >=0.4.16;
+
+
+// File: @openzeppelin/contracts/interfaces/IERC1363.sol
+
+
+// OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC1363.sol)
+
+pragma solidity >=0.6.2;
+
+
+
+/**
+ * @title IERC1363
+ * @dev Interface of the ERC-1363 standard as defined in the https://eips.ethereum.org/EIPS/eip-1363[ERC-1363].
+ *
+ * Defines an extension interface for ERC-20 tokens that supports executing code on a recipient contract
+ * after `transfer` or `transferFrom`, or code on a spender contract after `approve`, in a single transaction.
+ */
+interface IERC1363 is IERC20, IERC165 {
+    /*
+     * Note: the ERC-165 identifier for this interface is 0xb0202a11.
+     * 0xb0202a11 ===
+     *   bytes4(keccak256('transferAndCall(address,uint256)')) ^
+     *   bytes4(keccak256('transferAndCall(address,uint256,bytes)')) ^
+     *   bytes4(keccak256('transferFromAndCall(address,address,uint256)')) ^
+     *   bytes4(keccak256('transferFromAndCall(address,address,uint256,bytes)')) ^
+     *   bytes4(keccak256('approveAndCall(address,uint256)')) ^
+     *   bytes4(keccak256('approveAndCall(address,uint256,bytes)'))
+     */
+
+    /**
+     * @dev Moves a `value` amount of tokens from the caller's account to `to`
+     * and then calls {IERC1363Receiver-onTransferReceived} on `to`.
+     * @param to The address which you want to transfer to.
+     * @param value The amount of tokens to be transferred.
+     * @return A boolean value indicating whether the operation succeeded unless throwing.
+     */
+    function transferAndCall(address to, uint256 value) external returns (bool);
+
+    /**
+     * @dev Moves a `value` amount of tokens from the caller's account to `to`
+     * and then calls {IERC1363Receiver-onTransferReceived} on `to`.
+     * @param to The address which you want to transfer to.
+     * @param value The amount of tokens to be transferred.
+     * @param data Additional data with no specified format, sent in call to `to`.
+     * @return A boolean value indicating whether the operation succeeded unless throwing.
+     */
+    function transferAndCall(address to, uint256 value, bytes calldata data) external returns (bool);
+
+    /**
+     * @dev Moves a `value` amount of tokens from `from` to `to` using the allowance mechanism
+     * and then calls {IERC1363Receiver-onTransferReceived} on `to`.
+     * @param from The address which you want to send tokens from.
+     * @param to The address which you want to transfer to.
+     * @param value The amount of tokens to be transferred.
+     * @return A boolean value indicating whether the operation succeeded unless throwing.
+     */
+    function transferFromAndCall(address from, address to, uint256 value) external returns (bool);
+
+    /**
+     * @dev Moves a `value` amount of tokens from `from` to `to` using the allowance mechanism
+     * and then calls {IERC1363Receiver-onTransferReceived} on `to`.
+     * @param from The address which you want to send tokens from.
+     * @param to The address which you want to transfer to.
+     * @param value The amount of tokens to be transferred.
+     * @param data Additional data with no specified format, sent in call to `to`.
+     * @return A boolean value indicating whether the operation succeeded unless throwing.
+     */
+    function transferFromAndCall(address from, address to, uint256 value, bytes calldata data) external returns (bool);
+
+    /**
+     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
+     * caller's tokens and then calls {IERC1363Spender-onApprovalReceived} on `spender`.
+     * @param spender The address which will spend the funds.
+     * @param value The amount of tokens to be spent.
+     * @return A boolean value indicating whether the operation succeeded unless throwing.
+     */
+    function approveAndCall(address spender, uint256 value) external returns (bool);
+
+    /**
+     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
+     * caller's tokens and then calls {IERC1363Spender-onApprovalReceived} on `spender`.
+     * @param spender The address which will spend the funds.
+     * @param value The amount of tokens to be spent.
+     * @param data Additional data with no specified format, sent in call to `spender`.
+     * @return A boolean value indicating whether the operation succeeded unless throwing.
+     */
+    function approveAndCall(address spender, uint256 value, bytes calldata data) external returns (bool);
+}
+
+// File: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
+
+
+// OpenZeppelin Contracts (last updated v5.3.0) (token/ERC20/utils/SafeERC20.sol)
+
+pragma solidity ^0.8.20;
+
+
+
+/**
+ * @title SafeERC20
+ * @dev Wrappers around ERC-20 operations that throw on failure (when the token
+ * contract returns false). Tokens that return no value (and instead revert or
+ * throw on failure) are also supported, non-reverting calls are assumed to be
+ * successful.
+ * To use this library you can add a `using SafeERC20 for IERC20;` statement to your contract,
+ * which allows you to call the safe operations as `token.safeTransfer(...)`, etc.
+ */
+library SafeERC20 {
+    /**
+     * @dev An operation with an ERC-20 token failed.
+     */
+    error SafeERC20FailedOperation(address token);
+
+    /**
+     * @dev Indicates a failed `decreaseAllowance` request.
+     */
+    error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
+
+    /**
+     * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
+     * non-reverting calls are assumed to be successful.
+     */
+    function safeTransfer(IERC20 token, address to, uint256 value) internal {
+        _callOptionalReturn(token, abi.encodeCall(token.transfer, (to, value)));
+    }
+
+    /**
+     * @dev Transfer `value` amount of `token` from `from` to `to`, spending the approval given by `from` to the
+     * calling contract. If `token` returns no value, non-reverting calls are assumed to be successful.
+     */
+    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
+        _callOptionalReturn(token, abi.encodeCall(token.transferFrom, (from, to, value)));
+    }
+
+    /**
+     * @dev Variant of {safeTransfer} that returns a bool instead of reverting if the operation is not successful.
+     */
+    function trySafeTransfer(IERC20 token, address to, uint256 value) internal returns (bool) {
+        return _callOptionalReturnBool(token, abi.encodeCall(token.transfer, (to, value)));
+    }
+
+    /**
+     * @dev Variant of {safeTransferFrom} that returns a bool instead of reverting if the operation is not successful.
+     */
+    function trySafeTransferFrom(IERC20 token, address from, address to, uint256 value) internal returns (bool) {
+        return _callOptionalReturnBool(token, abi.encodeCall(token.transferFrom, (from, to, value)));
+    }
+
+    /**
+     * @dev Increase the calling contract's allowance toward `spender` by `value`. If `token` returns no value,
+     * non-reverting calls are assumed to be successful.
+     *
+     * IMPORTANT: If the token implements ERC-7674 (ERC-20 with temporary allowance), and if the "client"
+     * smart contract uses ERC-7674 to set temporary allowances, then the "client" smart contract should avoid using
+     * this function. Performing a {safeIncreaseAllowance} or {safeDecreaseAllowance} operation on a token contract
+     * that has a non-zero temporary allowance (for that particular owner-spender) will result in unexpected behavior.
+     */
+    function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
+        uint256 oldAllowance = token.allowance(address(this), spender);
+        forceApprove(token, spender, oldAllowance + value);
+    }
+
+    /**
+     * @dev Decrease the calling contract's allowance toward `spender` by `requestedDecrease`. If `token` returns no
+     * value, non-reverting calls are assumed to be successful.
+     *
+     * IMPORTANT: If the token implements ERC-7674 (ERC-20 with temporary allowance), and if the "client"
+     * smart contract uses ERC-7674 to set temporary allowances, then the "client" smart contract should avoid using
+     * this function. Performing a {safeIncreaseAllowance} or {safeDecreaseAllowance} operation on a token contract
+     * that has a non-zero temporary allowance (for that particular owner-spender) will result in unexpected behavior.
+     */
+    function safeDecreaseAllowance(IERC20 token, address spender, uint256 requestedDecrease) internal {
+        unchecked {
+            uint256 currentAllowance = token.allowance(address(this), spender);
+            if (currentAllowance < requestedDecrease) {
+                revert SafeERC20FailedDecreaseAllowance(spender, currentAllowance, requestedDecrease);
+            }
+            forceApprove(token, spender, currentAllowance - requestedDecrease);
+        }
+    }
+
+    /**
+     * @dev Set the calling contract's allowance toward `spender` to `value`. If `token` returns no value,
+     * non-reverting calls are assumed to be successful. Meant to be used with tokens that require the approval
+     * to be set to zero before setting it to a non-zero value, such as USDT.
+     *
+     * NOTE: If the token implements ERC-7674, this function will not modify any temporary allowance. This function
+     * only sets the "standard" allowance. Any temporary allowance will remain active, in addition to the value being
+     * set here.
+     */
+    function forceApprove(IERC20 token, address spender, uint256 value) internal {
+        bytes memory approvalCall = abi.encodeCall(token.approve, (spender, value));
+
+        if (!_callOptionalReturnBool(token, approvalCall)) {
+            _callOptionalReturn(token, abi.encodeCall(token.approve, (spender, 0)));
+            _callOptionalReturn(token, approvalCall);
+        }
+    }
+
+    /**
+     * @dev Performs an {ERC1363} transferAndCall, with a fallback to the simple {ERC20} transfer if the target has no
+     * code. This can be used to implement an {ERC721}-like safe transfer that rely on {ERC1363} checks when
+     * targeting contracts.
+     *
+     * Reverts if the returned value is other than `true`.
+     */
+    function transferAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
+        if (to.code.length == 0) {
+            safeTransfer(token, to, value);
+        } else if (!token.transferAndCall(to, value, data)) {
+            revert SafeERC20FailedOperation(address(token));
+        }
+    }
+
+    /**
+     * @dev Performs an {ERC1363} transferFromAndCall, with a fallback to the simple {ERC20} transferFrom if the target
+     * has no code. This can be used to implement an {ERC721}-like safe transfer that rely on {ERC1363} checks when
+     * targeting contracts.
+     *
+     * Reverts if the returned value is other than `true`.
+     */
+    function transferFromAndCallRelaxed(
+        IERC1363 token,
+        address from,
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal {
+        if (to.code.length == 0) {
+            safeTransferFrom(token, from, to, value);
+        } else if (!token.transferFromAndCall(from, to, value, data)) {
+            revert SafeERC20FailedOperation(address(token));
+        }
+    }
+
+    /**
+     * @dev Performs an {ERC1363} approveAndCall, with a fallback to the simple {ERC20} approve if the target has no
+     * code. This can be used to implement an {ERC721}-like safe transfer that rely on {ERC1363} checks when
+     * targeting contracts.
+     *
+     * NOTE: When the recipient address (`to`) has no code (i.e. is an EOA), this function behaves as {forceApprove}.
+     * Opposedly, when the recipient address (`to`) has code, this function only attempts to call {ERC1363-approveAndCall}
+     * once without retrying, and relies on the returned value to be true.
+     *
+     * Reverts if the returned value is other than `true`.
+     */
+    function approveAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
+        if (to.code.length == 0) {
+            forceApprove(token, to, value);
+        } else if (!token.approveAndCall(to, value, data)) {
+            revert SafeERC20FailedOperation(address(token));
+        }
+    }
+
+    /**
+     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
+     * on the return value: the return value is optional (but if data is returned, it must not be false).
+     * @param token The token targeted by the call.
+     * @param data The call data (encoded using abi.encode or one of its variants).
+     *
+     * This is a variant of {_callOptionalReturnBool} that reverts if call fails to meet the requirements.
+     */
+    function _callOptionalReturn(IERC20 token, bytes memory data) private {
+        uint256 returnSize;
+        uint256 returnValue;
+        assembly ("memory-safe") {
+            let success := call(gas(), token, 0, add(data, 0x20), mload(data), 0, 0x20)
+            // bubble errors
+            if iszero(success) {
+                let ptr := mload(0x40)
+                returndatacopy(ptr, 0, returndatasize())
+                revert(ptr, returndatasize())
+            }
+            returnSize := returndatasize()
+            returnValue := mload(0)
+        }
+
+        if (returnSize == 0 ? address(token).code.length == 0 : returnValue != 1) {
+            revert SafeERC20FailedOperation(address(token));
+        }
+    }
+
+    /**
+     * @dev Imitates a Solidity high-level call (i.e. a regular function call to a contract), relaxing the requirement
+     * on the return value: the return value is optional (but if data is returned, it must not be false).
+     * @param token The token targeted by the call.
+     * @param data The call data (encoded using abi.encode or one of its variants).
+     *
+     * This is a variant of {_callOptionalReturn} that silently catches all reverts and returns a bool instead.
+     */
+    function _callOptionalReturnBool(IERC20 token, bytes memory data) private returns (bool) {
+        bool success;
+        uint256 returnSize;
+        uint256 returnValue;
+        assembly ("memory-safe") {
+            success := call(gas(), token, 0, add(data, 0x20), mload(data), 0, 0x20)
+            returnSize := returndatasize()
+            returnValue := mload(0)
+        }
+        return success && (returnSize == 0 ? address(token).code.length > 0 : returnValue == 1);
+    }
+}
+
+// File: @chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol
+
+
+pragma solidity ^0.8.0;
+
+// solhint-disable-next-line interface-starts-with-i
+interface AggregatorV3Interface {
+  function decimals() external view returns (uint8);
+
+  function description() external view returns (string memory);
+
+  function version() external view returns (uint256);
+
+  function getRoundData(
+    uint80 _roundId
+  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+
+  function latestRoundData()
+    external
+    view
+    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+}
+
+// File: @uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol
+
+pragma solidity >=0.5.0;
+
+interface IUniswapV2Factory {
+    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+
+    function feeTo() external view returns (address);
+    function feeToSetter() external view returns (address);
+
+    function getPair(address tokenA, address tokenB) external view returns (address pair);
+    function allPairs(uint) external view returns (address pair);
+    function allPairsLength() external view returns (uint);
+
+    function createPair(address tokenA, address tokenB) external returns (address pair);
+
+    function setFeeTo(address) external;
+    function setFeeToSetter(address) external;
+}
+
+// File: @uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol
+
+pragma solidity >=0.5.0;
+
+interface IUniswapV2Pair {
+    event Approval(address indexed owner, address indexed spender, uint value);
+    event Transfer(address indexed from, address indexed to, uint value);
+
+    function name() external pure returns (string memory);
+    function symbol() external pure returns (string memory);
+    function decimals() external pure returns (uint8);
+    function totalSupply() external view returns (uint);
+    function balanceOf(address owner) external view returns (uint);
+    function allowance(address owner, address spender) external view returns (uint);
+
+    function approve(address spender, uint value) external returns (bool);
+    function transfer(address to, uint value) external returns (bool);
+    function transferFrom(address from, address to, uint value) external returns (bool);
+
+    function DOMAIN_SEPARATOR() external view returns (bytes32);
+    function PERMIT_TYPEHASH() external pure returns (bytes32);
+    function nonces(address owner) external view returns (uint);
+
+    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
+
+    event Mint(address indexed sender, uint amount0, uint amount1);
+    event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
+    event Swap(
+        address indexed sender,
+        uint amount0In,
+        uint amount1In,
+        uint amount0Out,
+        uint amount1Out,
+        address indexed to
+    );
+    event Sync(uint112 reserve0, uint112 reserve1);
+
+    function MINIMUM_LIQUIDITY() external pure returns (uint);
+    function factory() external view returns (address);
+    function token0() external view returns (address);
+    function token1() external view returns (address);
+    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+    function price0CumulativeLast() external view returns (uint);
+    function price1CumulativeLast() external view returns (uint);
+    function kLast() external view returns (uint);
+
+    function mint(address to) external returns (uint liquidity);
+    function burn(address to) external returns (uint amount0, uint amount1);
+    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
+    function skim(address to) external;
+    function sync() external;
+
+    function initialize(address, address) external;
+}
+
+// File: contracts/KipuBankV3.sol
+
+
+pragma solidity 0.8.26;
+
+// =================================================================================
+//                                  IMPORTS
+// =================================================================================
+
+// KipuBankV2 Dependencies
+
+
+
+
+
+// KipuBankV3 (Uniswap V2) Dependencies
+
+
+
+// WETH Interface (required for swapping ETH in V2)
+interface IWETH is IERC20 {
+    function deposit() external payable;
+
+    function withdraw(uint256) external;
+}
+
+/**
+ * @title KipuBankV3
+ * @author Chazarreta Agustin
+ * @notice DeFi deposit contract. Accepts ETH or ERC20s, converts them to USDC via Uniswap V2,
+ * and manages internal USDC accounting, respecting global limits
+ * @dev Inherits from Ownable and uses Uniswap V2 Factory/Pairs
+ */
+contract KipuBankV3 is Ownable {
+    using SafeERC20 for IERC20;
+    using SafeERC20 for IWETH;
+
+    /*/// TYPES, VARIABLES, CONSTANTS ///*/
+
+    /// @notice Mapping to store each user's balance, standardized in USDC (6 decimals)
+    mapping(address => uint256) public s_balancesUSD;
+
+    /// @notice Tracker for the total USDC held by the contract, for the global limit
+    uint256 public s_totalBankUSD;
+
+    /// @notice Global bank cap, in USD (6 decimals) and constant
+    uint256 public constant BANK_CAP_USD = 10_000 * 10 ** 6; // (assuming 10,000 USD with 6 decimals)
+
+    /// @notice Maximum withdrawal limit per transaction (constant)
+    uint256 public constant WITHDRAWAL_LIMIT_PER_TX = 100 * 10 ** 6; // (assuming 100 USD with 6 decimals)
+
+    /// @notice Constant for internal accounting (6 decimals)
+    uint8 internal constant ACCOUNTING_DECIMALS = 6;
+
+    // KipuBankV2 Dependencies (Chainlink)
+    /// @notice Immutable instance of the Chainlink ETH/USD Data Feed interface.
+    AggregatorV3Interface immutable i_ethUsdFeed;
+    /// @dev (18 ETH + 8 Feed) - 20 = 6 USD; therefore, the factor is 10^20
+    uint256 internal constant ETH_CONVERSION_FACTOR = 1 * 10 ** 20;
+    /// @notice Data Feed heartbeat in seconds (1 hour)
+    uint16 internal constant ORACLE_HEARTBEAT = 3600;
+
+    // KipuBankV3 Dependencies (Uniswap V2)
+    /// @notice Uniswap V2 Factory for getting pairs
+    IUniswapV2Factory immutable i_factory;
+    /// @notice Immutable instance of the USDC token (the reserve asset)
+    IERC20 immutable i_usdc;
+    /// @notice Immutable instance of the WETH token (for swapping ETH)
+    IWETH immutable i_weth;
+
+    /*/// EVENTS AND CUSTOM ERRORS ///*/
+
+    /// @notice Emitted when a deposit (direct or post-swap) is successful
+    event DepositExecuted(
+        address indexed user,
+        address indexed tokenIn,
+        uint256 amountIn,
+        uint256 amountUSDReceived
+    );
+    /// @notice Emitted when a USDC withdrawal is successful
+    event WithdrawalExecuted(address indexed user, uint256 amountUSDC);
+
+    // Errors (Reused from KipuBankV2 and new ones)
+    error GlobalLimitExceeded();
+    error ZeroAmount();
+    error WithdrawalLimitExceeded();
+    error InsufficientBalance();
+    error OracleCompromised();
+    error StalePrice();
+    error EthTransferFailed(bytes reason);
+    error PairDoesNotExist();
+    error InsufficientSwapOutput();
+    error InvalidToken(); // For duplicate tokens or ETH
+    error SwapFailed();
+
+    /*/// MODIFIERS AND ADMIN FUNCTIONS ///*/
+
+    modifier nonZeroAmount(uint256 _amount) {
+        if (_amount <= 0) {
+            revert ZeroAmount();
+        }
+        _;
+    }
+
+    /*/// CONSTRUCTOR ///*/
+
+    /**
+     * @notice Constructor
+     * @param _ethUsdFeed Chainlink ETH/USD Data Feed address
+     * @param _owner Owner's address (administrator)
+     * @param _factory Uniswap V2 Factory address
+     * @param _usdc USDC token address (the reserve asset)
+     * @param _weth WETH token address (for swapping ETH)
+     */
+    constructor(
+        address _ethUsdFeed,
+        address _owner,
+        address _factory,
+        address _usdc,
+        address _weth
+    ) Ownable(_owner) {
+        i_ethUsdFeed = AggregatorV3Interface(_ethUsdFeed);
+        i_factory = IUniswapV2Factory(_factory);
+        i_usdc = IERC20(_usdc);
+        i_weth = IWETH(_weth);
+    }
+
+    /*/// SPECIAL FUNCTIONS ///*/
+
+    /// @notice Rejects any call to an undefined function or ETH sent with data
+    fallback() external {
+        revert();
+    }
+
+    /// @notice
+    receive() external payable {
+        revert();
+    }
+
+    /*/// DEPOSIT FUNCTIONS ///*/
+
+    /**
+     * @notice Allows a user to deposit USDC directly (the reserve asset)
+     * @param _amount Amount of USDC to deposit (6 decimals)
+     */
+    function depositUSDC(uint256 _amount) external nonZeroAmount(_amount) {
+        // Checks the global bank limit before the transfer
+        if (s_totalBankUSD + _amount > BANK_CAP_USD) {
+            revert GlobalLimitExceeded();
+        }
+
+        s_balancesUSD[msg.sender] += _amount;
+        s_totalBankUSD += _amount;
+
+        // Emit event
+        emit DepositExecuted(msg.sender, address(i_usdc), _amount, _amount);
+
+        // Transfers the USDC from the user to this contract
+        i_usdc.safeTransferFrom(msg.sender, address(this), _amount);
+    }
+
+    /**
+     * @notice Deposits ETH, swaps it for USDC, and credits the USD balance
+     * @param _amountOutMin The minimum USDC amount accepted for the swap
+     */
+    function depositEthAndSwap(
+        uint256 _amountOutMin
+    ) external payable nonZeroAmount(msg.value) {
+        uint256 amountIn = msg.value;
+
+        // Global Limit Check (Pre-Swap using Chainlink)
+        uint256 expectedUSD = getEthValueInUSD(amountIn);
+        if (s_totalBankUSD + expectedUSD > BANK_CAP_USD) {
+            revert GlobalLimitExceeded();
+        }
+
+        // Wrap ETH to WETH
+        i_weth.deposit{value: amountIn}();
+
+        // Execute the swap (WETH -> USDC)
+        uint256 amountReceivedUSD = _executeSwap(
+            address(i_weth),
+            address(i_usdc),
+            amountIn,
+            _amountOutMin
+        );
+
+        // Updates balances with the actual swap result
+        s_balancesUSD[msg.sender] += amountReceivedUSD;
+        s_totalBankUSD += amountReceivedUSD;
+
+        emit DepositExecuted(
+            msg.sender,
+            address(0),
+            amountIn,
+            amountReceivedUSD
+        );
+    }
+
+    /**
+     * @notice Deposits any ERC20, swaps it for USDC, and credits the USD balance
+     * @param _tokenIn The address of the token to deposit
+     * @param _amountIn The amount of Token to deposit
+     * @param _amountOutMin The minimum USDC amount accepted
+     */
+    function depositErc20AndSwap(
+        address _tokenIn,
+        uint256 _amountIn,
+        uint256 _amountOutMin
+    ) external nonZeroAmount(_amountIn) {
+        if (_tokenIn == address(0) || _tokenIn == address(i_usdc)) {
+            revert InvalidToken();
+        }
+
+        // Global Limit Check (Post-Swap)
+        // The check will be done after the swap
+
+        // Transfer tokens (TokenIn) from the user to this contract
+        IERC20(_tokenIn).safeTransferFrom(msg.sender, address(this), _amountIn);
+
+        // Calls the internal swap logic (TokenIn -> USDC)
+        uint256 amountReceivedUSD = _executeSwap(
+            _tokenIn,
+            address(i_usdc),
+            _amountIn,
+            _amountOutMin
+        );
+
+        // Global Limit Check (Post-Swap)
+        if (s_totalBankUSD + amountReceivedUSD > BANK_CAP_USD) {
+            // Reverts the transaction even if the swap was successful
+            revert GlobalLimitExceeded();
+        }
+
+        s_balancesUSD[msg.sender] += amountReceivedUSD;
+        s_totalBankUSD += amountReceivedUSD;
+
+        emit DepositExecuted(
+            msg.sender,
+            _tokenIn,
+            _amountIn,
+            amountReceivedUSD
+        );
+    }
+
+    /*/// Swap Logic (Internal) ///*/
+
+    /**
+     * @notice Internal swap logic using Uniswap V2 Pairs
+     * @dev Swaps _tokenIn for _tokenOut (USDC)
+     * @return amountOut The amount of USDC received
+     */
+    function _executeSwap(
+        address _tokenIn,
+        address _tokenOut,
+        uint256 _amountIn,
+        uint256 _amountOutMin
+    ) internal returns (uint256 amountOut) {
+        // Get the Pair
+        address pairAddress = i_factory.getPair(_tokenIn, _tokenOut);
+        if (pairAddress == address(0)) {
+            revert PairDoesNotExist();
+        }
+        IUniswapV2Pair pair = IUniswapV2Pair(pairAddress);
+
+        // Calculates the expected output amount, using the SwapModule function
+        (uint256 reserveIn, uint256 reserveOut) = _getReserves(pair, _tokenIn);
+        uint256 amountOutExpected = getAmountOut(
+            _amountIn,
+            reserveIn,
+            reserveOut
+        );
+
+        if (amountOutExpected < _amountOutMin) {
+            revert InsufficientSwapOutput();
+        }
+
+        // Approves the Pair to spend the TokenIn
+        //SafeERC20.safeApprove(IERC20(_tokenIn), pairAddress, _amountIn);
+        IERC20 tokenInContract = IERC20(_tokenIn);
+        tokenInContract.approve(pairAddress, _amountIn);
+
+        // Measures the USDC balance before the swap
+        uint256 balanceBefore = i_usdc.balanceOf(address(this));
+
+        // Performs the swap, determines the output amounts for the swap() function
+        uint256 amount0Out;
+        uint256 amount1Out;
+        if (pair.token0() == _tokenIn) {
+            amount0Out = 0;
+            amount1Out = amountOutExpected;
+        } else {
+            amount0Out = amountOutExpected;
+            amount1Out = 0;
+        }
+
+        // Sends the output tokens (USDC) to this contract (address(this))
+        try pair.swap(amount0Out, amount1Out, address(this), "") {} catch {
+            revert SwapFailed();
+        }
+
+        // Measures the USDC balance AFTER the swap
+        uint256 balanceAfter = i_usdc.balanceOf(address(this));
+
+        // Calculates the actual result
+        amountOut = balanceAfter - balanceBefore;
+
+        if (amountOut < _amountOutMin) {
+            revert InsufficientSwapOutput(); // Double-check security post-swap
+        }
+    }
+
+    /*/// WITHDRAWAL FUNCTIONS ///*/
+
+    /**
+     * @notice Allows a user to withdraw their balance (USDC only)
+     * @param _amount Amount of USDC to withdraw (6 decimals)
+     */
+    function withdraw(uint256 _amount) external nonZeroAmount(_amount) {
+        uint256 currentBalance = s_balancesUSD[msg.sender];
+        if (currentBalance < _amount) revert InsufficientBalance();
+
+        if (_amount > WITHDRAWAL_LIMIT_PER_TX) revert WithdrawalLimitExceeded();
+
+        // Update balances before external interaction
+        s_balancesUSD[msg.sender] -= _amount;
+        s_totalBankUSD -= _amount;
+
+        // Emits withdrawal executed event
+        emit WithdrawalExecuted(msg.sender, _amount);
+
+        // Secure handling of ERC-20 transfer (USDC)
+        i_usdc.safeTransfer(msg.sender, _amount);
+    }
+
+    /*/// VIEW AND ORACLE FUNCTIONS  ///*/
+
+    /**
+     * @notice Returns the user's total balance in USD (6 decimals)
+     */
+    function getBalance() external view returns (uint256) {
+        return s_balancesUSD[msg.sender];
+    }
+
+    /**
+     * @notice Returns the value in USD (6 decimals) of an ETH amount
+     * @param _ethAmount Amount of ETH (18 decimals)
+     * @return convertedAmount_ Value in USD (6 decimals)
+     */
+    function getEthValueInUSD(
+        uint256 _ethAmount
+    ) public view returns (uint256 convertedAmount_) {
+        uint256 ethPriceIn8Decimals = getChainlinkPrice(); // Price Query
+        convertedAmount_ =
+            (_ethAmount * ethPriceIn8Decimals) /
+            ETH_CONVERSION_FACTOR;
+    }
+
+    /**
+     * @notice Queries the ETH/USD price via Chainlink
+     * @return The price of ETH in USD (8 decimals)
+     */
+    function getChainlinkPrice() public view returns (uint256) {
+        (, int256 ethUSDPrice, , uint256 updatedAt, ) = i_ethUsdFeed
+            .latestRoundData();
+        if (ethUSDPrice <= 0) revert OracleCompromised();
+        if (block.timestamp - updatedAt > ORACLE_HEARTBEAT) revert StalePrice();
+        return uint256(ethUSDPrice);
+    }
+
+    /*/// AUXILIARY FUNCTIONS ///*/
+
+    /**
+     * @notice Auxiliary function to calculate the output amount
+     * @dev Implements the Uniswap V2 AMM formula: amountOut = (amountIn * 997 * reserveOut) / (reserveIn * 1000 + amountIn * 997)
+     */
+    function getAmountOut(
+        uint256 amountIn,
+        uint256 reserveIn,
+        uint256 reserveOut
+    ) internal pure returns (uint256 amountOut) {
+        if (amountIn == 0 || reserveIn == 0 || reserveOut == 0) {
+            revert InsufficientBalance();
+        }
+
+        uint256 amountInWithFee = amountIn * 997;
+        uint256 numerator = amountInWithFee * reserveOut;
+        uint256 denominator = (reserveIn * 1000) + amountInWithFee;
+
+        amountOut = numerator / denominator;
+    }
+
+    /**
+     * @notice Auxiliary function to get the ordered reserves
+     */
+    function _getReserves(
+        IUniswapV2Pair _pair,
+        address _tokenIn
+    ) internal view returns (uint256 reserveIn, uint256 reserveOut) {
+        (uint256 reserve0, uint256 reserve1, ) = _pair.getReserves();
+
+        if (_pair.token0() == _tokenIn) {
+            reserveIn = reserve0;
+            reserveOut = reserve1;
+        } else {
+            reserveIn = reserve1;
+            reserveOut = reserve0;
+        }
+    }
+}
