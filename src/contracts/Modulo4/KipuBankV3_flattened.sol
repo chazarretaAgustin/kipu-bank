@@ -1,6 +1,4 @@
-
 // File: @openzeppelin/contracts/utils/Context.sol
-
 
 // OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)
 
@@ -32,11 +30,9 @@ abstract contract Context {
 
 // File: @openzeppelin/contracts/access/Ownable.sol
 
-
 // OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)
 
 pragma solidity ^0.8.20;
-
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where
@@ -63,7 +59,10 @@ abstract contract Ownable is Context {
      */
     error OwnableInvalidOwner(address owner);
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     /**
      * @dev Initializes the contract setting the address provided by the deployer as the initial owner.
@@ -134,7 +133,6 @@ abstract contract Ownable is Context {
 
 // File: @openzeppelin/contracts/token/ERC20/IERC20.sol
 
-
 // OpenZeppelin Contracts (last updated v5.4.0) (token/ERC20/IERC20.sol)
 
 pragma solidity >=0.4.16;
@@ -155,7 +153,11 @@ interface IERC20 {
      * @dev Emitted when the allowance of a `spender` for an `owner` is set by
      * a call to {approve}. `value` is the new allowance.
      */
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 
     /**
      * @dev Returns the value of tokens in existence.
@@ -183,7 +185,10 @@ interface IERC20 {
      *
      * This value changes when {approve} or {transferFrom} are called.
      */
-    function allowance(address owner, address spender) external view returns (uint256);
+    function allowance(
+        address owner,
+        address spender
+    ) external view returns (uint256);
 
     /**
      * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
@@ -211,19 +216,20 @@ interface IERC20 {
      *
      * Emits a {Transfer} event.
      */
-    function transferFrom(address from, address to, uint256 value) external returns (bool);
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    ) external returns (bool);
 }
 
 // File: @openzeppelin/contracts/interfaces/IERC20.sol
-
 
 // OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC20.sol)
 
 pragma solidity >=0.4.16;
 
-
 // File: @openzeppelin/contracts/utils/introspection/IERC165.sol
-
 
 // OpenZeppelin Contracts (last updated v5.4.0) (utils/introspection/IERC165.sol)
 
@@ -252,20 +258,15 @@ interface IERC165 {
 
 // File: @openzeppelin/contracts/interfaces/IERC165.sol
 
-
 // OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC165.sol)
 
 pragma solidity >=0.4.16;
 
-
 // File: @openzeppelin/contracts/interfaces/IERC1363.sol
-
 
 // OpenZeppelin Contracts (last updated v5.4.0) (interfaces/IERC1363.sol)
 
 pragma solidity >=0.6.2;
-
-
 
 /**
  * @title IERC1363
@@ -303,7 +304,11 @@ interface IERC1363 is IERC20, IERC165 {
      * @param data Additional data with no specified format, sent in call to `to`.
      * @return A boolean value indicating whether the operation succeeded unless throwing.
      */
-    function transferAndCall(address to, uint256 value, bytes calldata data) external returns (bool);
+    function transferAndCall(
+        address to,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bool);
 
     /**
      * @dev Moves a `value` amount of tokens from `from` to `to` using the allowance mechanism
@@ -313,7 +318,11 @@ interface IERC1363 is IERC20, IERC165 {
      * @param value The amount of tokens to be transferred.
      * @return A boolean value indicating whether the operation succeeded unless throwing.
      */
-    function transferFromAndCall(address from, address to, uint256 value) external returns (bool);
+    function transferFromAndCall(
+        address from,
+        address to,
+        uint256 value
+    ) external returns (bool);
 
     /**
      * @dev Moves a `value` amount of tokens from `from` to `to` using the allowance mechanism
@@ -324,7 +333,12 @@ interface IERC1363 is IERC20, IERC165 {
      * @param data Additional data with no specified format, sent in call to `to`.
      * @return A boolean value indicating whether the operation succeeded unless throwing.
      */
-    function transferFromAndCall(address from, address to, uint256 value, bytes calldata data) external returns (bool);
+    function transferFromAndCall(
+        address from,
+        address to,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bool);
 
     /**
      * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
@@ -333,7 +347,10 @@ interface IERC1363 is IERC20, IERC165 {
      * @param value The amount of tokens to be spent.
      * @return A boolean value indicating whether the operation succeeded unless throwing.
      */
-    function approveAndCall(address spender, uint256 value) external returns (bool);
+    function approveAndCall(
+        address spender,
+        uint256 value
+    ) external returns (bool);
 
     /**
      * @dev Sets a `value` amount of tokens as the allowance of `spender` over the
@@ -343,17 +360,18 @@ interface IERC1363 is IERC20, IERC165 {
      * @param data Additional data with no specified format, sent in call to `spender`.
      * @return A boolean value indicating whether the operation succeeded unless throwing.
      */
-    function approveAndCall(address spender, uint256 value, bytes calldata data) external returns (bool);
+    function approveAndCall(
+        address spender,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bool);
 }
 
 // File: @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 
-
 // OpenZeppelin Contracts (last updated v5.3.0) (token/ERC20/utils/SafeERC20.sol)
 
 pragma solidity ^0.8.20;
-
-
 
 /**
  * @title SafeERC20
@@ -373,7 +391,11 @@ library SafeERC20 {
     /**
      * @dev Indicates a failed `decreaseAllowance` request.
      */
-    error SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease);
+    error SafeERC20FailedDecreaseAllowance(
+        address spender,
+        uint256 currentAllowance,
+        uint256 requestedDecrease
+    );
 
     /**
      * @dev Transfer `value` amount of `token` from the calling contract to `to`. If `token` returns no value,
@@ -387,22 +409,47 @@ library SafeERC20 {
      * @dev Transfer `value` amount of `token` from `from` to `to`, spending the approval given by `from` to the
      * calling contract. If `token` returns no value, non-reverting calls are assumed to be successful.
      */
-    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
-        _callOptionalReturn(token, abi.encodeCall(token.transferFrom, (from, to, value)));
+    function safeTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
+        _callOptionalReturn(
+            token,
+            abi.encodeCall(token.transferFrom, (from, to, value))
+        );
     }
 
     /**
      * @dev Variant of {safeTransfer} that returns a bool instead of reverting if the operation is not successful.
      */
-    function trySafeTransfer(IERC20 token, address to, uint256 value) internal returns (bool) {
-        return _callOptionalReturnBool(token, abi.encodeCall(token.transfer, (to, value)));
+    function trySafeTransfer(
+        IERC20 token,
+        address to,
+        uint256 value
+    ) internal returns (bool) {
+        return
+            _callOptionalReturnBool(
+                token,
+                abi.encodeCall(token.transfer, (to, value))
+            );
     }
 
     /**
      * @dev Variant of {safeTransferFrom} that returns a bool instead of reverting if the operation is not successful.
      */
-    function trySafeTransferFrom(IERC20 token, address from, address to, uint256 value) internal returns (bool) {
-        return _callOptionalReturnBool(token, abi.encodeCall(token.transferFrom, (from, to, value)));
+    function trySafeTransferFrom(
+        IERC20 token,
+        address from,
+        address to,
+        uint256 value
+    ) internal returns (bool) {
+        return
+            _callOptionalReturnBool(
+                token,
+                abi.encodeCall(token.transferFrom, (from, to, value))
+            );
     }
 
     /**
@@ -414,7 +461,11 @@ library SafeERC20 {
      * this function. Performing a {safeIncreaseAllowance} or {safeDecreaseAllowance} operation on a token contract
      * that has a non-zero temporary allowance (for that particular owner-spender) will result in unexpected behavior.
      */
-    function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
+    function safeIncreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
         uint256 oldAllowance = token.allowance(address(this), spender);
         forceApprove(token, spender, oldAllowance + value);
     }
@@ -428,11 +479,19 @@ library SafeERC20 {
      * this function. Performing a {safeIncreaseAllowance} or {safeDecreaseAllowance} operation on a token contract
      * that has a non-zero temporary allowance (for that particular owner-spender) will result in unexpected behavior.
      */
-    function safeDecreaseAllowance(IERC20 token, address spender, uint256 requestedDecrease) internal {
+    function safeDecreaseAllowance(
+        IERC20 token,
+        address spender,
+        uint256 requestedDecrease
+    ) internal {
         unchecked {
             uint256 currentAllowance = token.allowance(address(this), spender);
             if (currentAllowance < requestedDecrease) {
-                revert SafeERC20FailedDecreaseAllowance(spender, currentAllowance, requestedDecrease);
+                revert SafeERC20FailedDecreaseAllowance(
+                    spender,
+                    currentAllowance,
+                    requestedDecrease
+                );
             }
             forceApprove(token, spender, currentAllowance - requestedDecrease);
         }
@@ -447,11 +506,21 @@ library SafeERC20 {
      * only sets the "standard" allowance. Any temporary allowance will remain active, in addition to the value being
      * set here.
      */
-    function forceApprove(IERC20 token, address spender, uint256 value) internal {
-        bytes memory approvalCall = abi.encodeCall(token.approve, (spender, value));
+    function forceApprove(
+        IERC20 token,
+        address spender,
+        uint256 value
+    ) internal {
+        bytes memory approvalCall = abi.encodeCall(
+            token.approve,
+            (spender, value)
+        );
 
         if (!_callOptionalReturnBool(token, approvalCall)) {
-            _callOptionalReturn(token, abi.encodeCall(token.approve, (spender, 0)));
+            _callOptionalReturn(
+                token,
+                abi.encodeCall(token.approve, (spender, 0))
+            );
             _callOptionalReturn(token, approvalCall);
         }
     }
@@ -463,7 +532,12 @@ library SafeERC20 {
      *
      * Reverts if the returned value is other than `true`.
      */
-    function transferAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
+    function transferAndCallRelaxed(
+        IERC1363 token,
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal {
         if (to.code.length == 0) {
             safeTransfer(token, to, value);
         } else if (!token.transferAndCall(to, value, data)) {
@@ -503,7 +577,12 @@ library SafeERC20 {
      *
      * Reverts if the returned value is other than `true`.
      */
-    function approveAndCallRelaxed(IERC1363 token, address to, uint256 value, bytes memory data) internal {
+    function approveAndCallRelaxed(
+        IERC1363 token,
+        address to,
+        uint256 value,
+        bytes memory data
+    ) internal {
         if (to.code.length == 0) {
             forceApprove(token, to, value);
         } else if (!token.approveAndCall(to, value, data)) {
@@ -523,7 +602,15 @@ library SafeERC20 {
         uint256 returnSize;
         uint256 returnValue;
         assembly ("memory-safe") {
-            let success := call(gas(), token, 0, add(data, 0x20), mload(data), 0, 0x20)
+            let success := call(
+                gas(),
+                token,
+                0,
+                add(data, 0x20),
+                mload(data),
+                0,
+                0x20
+            )
             // bubble errors
             if iszero(success) {
                 let ptr := mload(0x40)
@@ -534,7 +621,9 @@ library SafeERC20 {
             returnValue := mload(0)
         }
 
-        if (returnSize == 0 ? address(token).code.length == 0 : returnValue != 1) {
+        if (
+            returnSize == 0 ? address(token).code.length == 0 : returnValue != 1
+        ) {
             revert SafeERC20FailedOperation(address(token));
         }
     }
@@ -547,40 +636,71 @@ library SafeERC20 {
      *
      * This is a variant of {_callOptionalReturn} that silently catches all reverts and returns a bool instead.
      */
-    function _callOptionalReturnBool(IERC20 token, bytes memory data) private returns (bool) {
+    function _callOptionalReturnBool(
+        IERC20 token,
+        bytes memory data
+    ) private returns (bool) {
         bool success;
         uint256 returnSize;
         uint256 returnValue;
         assembly ("memory-safe") {
-            success := call(gas(), token, 0, add(data, 0x20), mload(data), 0, 0x20)
+            success := call(
+                gas(),
+                token,
+                0,
+                add(data, 0x20),
+                mload(data),
+                0,
+                0x20
+            )
             returnSize := returndatasize()
             returnValue := mload(0)
         }
-        return success && (returnSize == 0 ? address(token).code.length > 0 : returnValue == 1);
+        return
+            success &&
+            (
+                returnSize == 0
+                    ? address(token).code.length > 0
+                    : returnValue == 1
+            );
     }
 }
 
 // File: @chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol
 
-
 pragma solidity ^0.8.0;
 
 // solhint-disable-next-line interface-starts-with-i
 interface AggregatorV3Interface {
-  function decimals() external view returns (uint8);
+    function decimals() external view returns (uint8);
 
-  function description() external view returns (string memory);
+    function description() external view returns (string memory);
 
-  function version() external view returns (uint256);
+    function version() external view returns (uint256);
 
-  function getRoundData(
-    uint80 _roundId
-  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+    function getRoundData(
+        uint80 _roundId
+    )
+        external
+        view
+        returns (
+            uint80 roundId,
+            int256 answer,
+            uint256 startedAt,
+            uint256 updatedAt,
+            uint80 answeredInRound
+        );
 
-  function latestRoundData()
-    external
-    view
-    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+    function latestRoundData()
+        external
+        view
+        returns (
+            uint80 roundId,
+            int256 answer,
+            uint256 startedAt,
+            uint256 updatedAt,
+            uint80 answeredInRound
+        );
 }
 
 // File: @uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol
@@ -588,18 +708,33 @@ interface AggregatorV3Interface {
 pragma solidity >=0.5.0;
 
 interface IUniswapV2Factory {
-    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+    event PairCreated(
+        address indexed token0,
+        address indexed token1,
+        address pair,
+        uint
+    );
 
     function feeTo() external view returns (address);
+
     function feeToSetter() external view returns (address);
 
-    function getPair(address tokenA, address tokenB) external view returns (address pair);
+    function getPair(
+        address tokenA,
+        address tokenB
+    ) external view returns (address pair);
+
     function allPairs(uint) external view returns (address pair);
+
     function allPairsLength() external view returns (uint);
 
-    function createPair(address tokenA, address tokenB) external returns (address pair);
+    function createPair(
+        address tokenA,
+        address tokenB
+    ) external returns (address pair);
 
     function setFeeTo(address) external;
+
     function setFeeToSetter(address) external;
 }
 
@@ -612,24 +747,53 @@ interface IUniswapV2Pair {
     event Transfer(address indexed from, address indexed to, uint value);
 
     function name() external pure returns (string memory);
+
     function symbol() external pure returns (string memory);
+
     function decimals() external pure returns (uint8);
+
     function totalSupply() external view returns (uint);
+
     function balanceOf(address owner) external view returns (uint);
-    function allowance(address owner, address spender) external view returns (uint);
+
+    function allowance(
+        address owner,
+        address spender
+    ) external view returns (uint);
 
     function approve(address spender, uint value) external returns (bool);
+
     function transfer(address to, uint value) external returns (bool);
-    function transferFrom(address from, address to, uint value) external returns (bool);
+
+    function transferFrom(
+        address from,
+        address to,
+        uint value
+    ) external returns (bool);
 
     function DOMAIN_SEPARATOR() external view returns (bytes32);
+
     function PERMIT_TYPEHASH() external pure returns (bytes32);
+
     function nonces(address owner) external view returns (uint);
 
-    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
+    function permit(
+        address owner,
+        address spender,
+        uint value,
+        uint deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external;
 
     event Mint(address indexed sender, uint amount0, uint amount1);
-    event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
+    event Burn(
+        address indexed sender,
+        uint amount0,
+        uint amount1,
+        address indexed to
+    );
     event Swap(
         address indexed sender,
         uint amount0In,
@@ -641,25 +805,43 @@ interface IUniswapV2Pair {
     event Sync(uint112 reserve0, uint112 reserve1);
 
     function MINIMUM_LIQUIDITY() external pure returns (uint);
+
     function factory() external view returns (address);
+
     function token0() external view returns (address);
+
     function token1() external view returns (address);
-    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+
+    function getReserves()
+        external
+        view
+        returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+
     function price0CumulativeLast() external view returns (uint);
+
     function price1CumulativeLast() external view returns (uint);
+
     function kLast() external view returns (uint);
 
     function mint(address to) external returns (uint liquidity);
+
     function burn(address to) external returns (uint amount0, uint amount1);
-    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
+
+    function swap(
+        uint amount0Out,
+        uint amount1Out,
+        address to,
+        bytes calldata data
+    ) external;
+
     function skim(address to) external;
+
     function sync() external;
 
     function initialize(address, address) external;
 }
 
 // File: contracts/KipuBankV3.sol
-
 
 pragma solidity 0.8.26;
 
@@ -669,13 +851,7 @@ pragma solidity 0.8.26;
 
 // KipuBankV2 Dependencies
 
-
-
-
-
 // KipuBankV3 (Uniswap V2) Dependencies
-
-
 
 // WETH Interface (required for swapping ETH in V2)
 interface IWETH is IERC20 {
